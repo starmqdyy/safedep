@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { PackageJson, DependencyChange, DependencySection } from './types';
+import { calculateRisk } from './risk';
 
 /**
  * Membaca file package.json dan mengembalikan objek PackageJson.
@@ -20,7 +21,7 @@ export function readPackageJson(filePath: string): PackageJson {
 }
 
 /**
- * Membandingkan dua objek dependencies (atau devDependencies) dan mendeteksi perubahan.
+ * Membandingkan dua objek dependencies (atau devDependencies) dan mendeteksi perubahan beserta tingkat risikonya.
  */
 export function compareDependencies(
   oldDeps: Record<string, string> = {},
@@ -36,30 +37,39 @@ export function compareDependencies(
 
     // Dependency ditambahkan
     if (oldVersion === undefined && newVersion !== undefined) {
+      const riskInfo = calculateRisk('added', undefined, newVersion);
       changes.push({
         name,
         type: 'added',
         section,
         newVersion,
+        risk: riskInfo.risk,
+        versionChange: riskInfo.versionChange,
       });
     }
     // Dependency dihapus
     else if (oldVersion !== undefined && newVersion === undefined) {
+      const riskInfo = calculateRisk('removed', oldVersion, undefined);
       changes.push({
         name,
         type: 'removed',
         section,
         oldVersion,
+        risk: riskInfo.risk,
+        versionChange: riskInfo.versionChange,
       });
     }
     // Dependency versinya diperbarui
     else if (oldVersion !== undefined && newVersion !== undefined && oldVersion !== newVersion) {
+      const riskInfo = calculateRisk('updated', oldVersion, newVersion);
       changes.push({
         name,
         type: 'updated',
         section,
         oldVersion,
         newVersion,
+        risk: riskInfo.risk,
+        versionChange: riskInfo.versionChange,
       });
     }
     // Jika versi sama (tidak berubah), diabaikan dan tidak dimasukkan ke dalam daftar

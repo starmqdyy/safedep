@@ -16,6 +16,8 @@ describe('SafeDep Compare Module', () => {
           type: 'added',
           section: 'dependencies',
           newVersion: '^1.6.0',
+          risk: 'MEDIUM',
+          versionChange: null,
         },
       ]);
     });
@@ -32,6 +34,8 @@ describe('SafeDep Compare Module', () => {
           type: 'removed',
           section: 'dependencies',
           oldVersion: '^4.17.21',
+          risk: 'MEDIUM',
+          versionChange: null,
         },
       ]);
     });
@@ -49,6 +53,8 @@ describe('SafeDep Compare Module', () => {
           section: 'dependencies',
           oldVersion: '^4.17.1',
           newVersion: '^4.18.2',
+          risk: 'MEDIUM',
+          versionChange: 'minor',
         },
       ]);
     });
@@ -83,6 +89,8 @@ describe('SafeDep Compare Module', () => {
         section: 'dependencies',
         oldVersion: '^4.17.1',
         newVersion: '^4.18.2',
+        risk: 'MEDIUM',
+        versionChange: 'minor',
       });
       expect(result).toContainEqual({
         name: 'typescript',
@@ -90,6 +98,8 @@ describe('SafeDep Compare Module', () => {
         section: 'devDependencies',
         oldVersion: '^4.9.5',
         newVersion: '^5.3.3',
+        risk: 'HIGH',
+        versionChange: 'major',
       });
     });
   });
@@ -103,7 +113,6 @@ describe('SafeDep Compare Module', () => {
 
     it('harus melempar error jika file JSON tidak valid', () => {
       const exampleOldPath = path.join(__dirname, '../examples/package-old.json');
-      // Pastikan file valid dapat dibaca tanpa throw
       expect(() => readPackageJson(exampleOldPath)).not.toThrow();
     });
   });

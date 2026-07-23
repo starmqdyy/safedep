@@ -10,12 +10,18 @@ export type ChangeType = 'added' | 'removed' | 'updated';
 
 export type DependencySection = 'dependencies' | 'devDependencies';
 
+export type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'UNKNOWN';
+
+export type VersionChangeType = 'major' | 'minor' | 'patch' | null;
+
 export interface DependencyChange {
   name: string;
   type: ChangeType;
   section: DependencySection;
   oldVersion?: string;
   newVersion?: string;
+  risk: RiskLevel;
+  versionChange?: VersionChangeType;
 }
 
 export interface CompareResult {

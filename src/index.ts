@@ -25,17 +25,33 @@ function main() {
       return;
     }
 
+    const riskCounts = {
+      HIGH: 0,
+      MEDIUM: 0,
+      LOW: 0,
+      UNKNOWN: 0,
+    };
+
     changes.forEach((change) => {
+      riskCounts[change.risk]++;
+
+      const riskTag = `[${change.risk}]`.padEnd(9, ' ');
+
       if (change.type === 'added') {
-        console.log(`[+] [DITAMBAHKAN] ${change.name}@${change.newVersion} (${change.section})`);
+        console.log(`${riskTag} [DITAMBAHKAN] ${change.name}@${change.newVersion} (${change.section})`);
       } else if (change.type === 'removed') {
-        console.log(`[-] [DIHAPUS]     ${change.name}@${change.oldVersion} (${change.section})`);
+        console.log(`${riskTag} [DIHAPUS]     ${change.name}@${change.oldVersion} (${change.section})`);
       } else if (change.type === 'updated') {
-        console.log(`[*] [DIPERBARUI]  ${change.name}: ${change.oldVersion} -> ${change.newVersion} (${change.section})`);
+        console.log(`${riskTag} [DIPERBARUI]  ${change.name}: ${change.oldVersion} -> ${change.newVersion} (${change.section})`);
       }
     });
 
-    console.log(`\nTotal Perubahan: ${changes.length}\n`);
+    console.log(`\nTotal Perubahan: ${changes.length}`);
+    console.log(`\nRingkasan Risiko:`);
+    console.log(`HIGH: ${riskCounts.HIGH}`);
+    console.log(`MEDIUM: ${riskCounts.MEDIUM}`);
+    console.log(`LOW: ${riskCounts.LOW}`);
+    console.log(`UNKNOWN: ${riskCounts.UNKNOWN}\n`);
   } catch (error) {
     if (error instanceof Error) {
       console.error(`Error: ${error.message}`);
