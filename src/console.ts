@@ -1,22 +1,57 @@
 import chalk from 'chalk';
 import { DependencyChange, RiskLevel, ChangeType } from './types';
 
+const BOX_WIDTH = 46;
+
+function centerText(
+  plainText: string,
+  styledText = plainText,
+  width = BOX_WIDTH
+): string {
+  const safeText = plainText.slice(0, width);
+  const remainingSpace = width - safeText.length;
+  const leftPadding = Math.floor(remainingSpace / 2);
+  const rightPadding = remainingSpace - leftPadding;
+
+  return (
+    ' '.repeat(leftPadding) +
+    styledText +
+    ' '.repeat(rightPadding)
+  );
+}
+
+function leftText(
+  text: string,
+  width = BOX_WIDTH,
+  padding = 3
+): string {
+  const availableWidth = width - padding;
+  const safeText = text.slice(0, availableWidth);
+
+  return (
+    ' '.repeat(padding) +
+    safeText +
+    ' '.repeat(availableWidth - safeText.length)
+  );
+}
+
 /**
- * Menampilkan header identitas project SafeDep.
+ * Menampilkan header identitas project DepSentry.
  */
 export function printHeader(): void {
-  const title = chalk.cyan.bold('SafeDep');
+  const titleText = 'DepSentry';
+  const styledTitle = chalk.cyan.bold(titleText);
   const subtitle = 'Dependency Risk Analyzer for Node.js';
   const author = 'Created by starmqdyy';
-  const github = 'github.com/starmqdyy/safedep';
+  const github = 'github.com/starmqdyy/depsentry';
 
-  console.log('╭──────────────────────────────────────────────╮');
-  console.log(`│                  ${title}                     │`);
-  console.log(`│   ${subtitle}       │`);
-  console.log('│                                              │');
-  console.log(`│   ${author}                       │`);
-  console.log(`│   ${github}               │`);
-  console.log('╰──────────────────────────────────────────────╯\n');
+  console.log(`╭${'─'.repeat(BOX_WIDTH)}╮`);
+  console.log(`│${centerText(titleText, styledTitle)}│`);
+  console.log(`│${centerText(subtitle)}│`);
+  console.log(`│${' '.repeat(BOX_WIDTH)}│`);
+  console.log(`│${leftText(author)}│`);
+  console.log(`│${leftText(github)}│`);
+  console.log(`╰${'─'.repeat(BOX_WIDTH)}╯\n`);
 }
 
 /**
@@ -119,5 +154,5 @@ export function printRiskSummary(changes: DependencyChange[]): void {
   console.log(`  ${chalk.gray('UNKNOWN'.padEnd(10, ' '))} ${counts.UNKNOWN}\n`);
 
   console.log(chalk.bold(`Total changes: ${changes.length}\n`));
-  console.log(chalk.green.bold('SafeDep completed successfully.'));
+  console.log(chalk.green.bold('DepSentry completed successfully.'));
 }
